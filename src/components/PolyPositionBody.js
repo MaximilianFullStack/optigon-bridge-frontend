@@ -12,7 +12,7 @@ export default function PolyPositionBody() {
    const [poolShare, setPoolShare] = useState("");
 
    const RPC =
-      "https://polygon-mumbai.g.alchemy.com/v2/uw_Gwkz6SjluycgL-W_SZseL28Enw11G";
+      "";
 
    async function getUserData() {
       const provider = await new ethers.providers.Web3Provider(window.ethereum);
