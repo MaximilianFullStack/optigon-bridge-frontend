@@ -29,8 +29,7 @@ export default function OptimismBridge() {
    }
 
    async function checkLiquidity() {
-      const RPC =
-         "";
+      const RPC = `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_POLYGON_RPC}`;
 
       const alchemy = new ethers.providers.JsonRpcProvider(RPC);
       const bridge = new ethers.Contract(

@@ -11,8 +11,7 @@ export default function OptimismPositionBody() {
    const [totalGenFees, setTotalGenFees] = useState("");
    const [poolShare, setPoolShare] = useState("");
 
-   const RPC =
-      "";
+   const RPC = `https://opt-goerli.g.alchemy.com/v2/${process.env.REACT_APP_OPTIMISM_RPC}`;
 
    async function getUserData() {
       const provider = await new ethers.providers.Web3Provider(window.ethereum);

@@ -10,10 +10,8 @@ export default function PolyPoolData() {
    const [fee, setFeeValue] = useState("");
    const [share, setPoolShare] = useState("");
 
-   const RPC =
-      "";
-   const oracleRPC =
-      "";
+   const RPC = `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_POLYGON_RPC}`;
+   const oracleRPC = `https://eth-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ORACLE_RPC}`;
 
    async function getOracleEthPrice() {
       const alchemy = new ethers.providers.JsonRpcProvider(oracleRPC);
