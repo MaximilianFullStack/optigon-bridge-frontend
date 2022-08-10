@@ -30,7 +30,7 @@ export default function PolygonBridgeBody() {
 
    async function checkLiquidity() {
       const RPC =
-         "https://opt-goerli.g.alchemy.com/v2/fPIO4h4AEw7YD3MuImmy6ZkhJcpIuLXS";
+         "";
 
       const alchemy = new ethers.providers.JsonRpcProvider(RPC);
       const bridge = new ethers.Contract(
