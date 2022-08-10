@@ -12,7 +12,7 @@ export default function OptimismPositionBody() {
    const [poolShare, setPoolShare] = useState("");
 
    const RPC =
-      "https://opt-goerli.g.alchemy.com/v2/fPIO4h4AEw7YD3MuImmy6ZkhJcpIuLXS";
+      "";
 
    async function getUserData() {
       const provider = await new ethers.providers.Web3Provider(window.ethereum);

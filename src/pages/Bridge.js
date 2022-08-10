@@ -8,10 +8,6 @@ export default function Bridge() {
    const { search } = useLocation();
    const { chain } = queryString.parse(search);
 
-   //  function bridgeChain() {
-   //    if (chain === "polygon") {}
-   //  }
-
    return (
       <>
          {chain === "optimism" ? <OptimismBridgeBody /> : <PolygonBridgeBody />}
