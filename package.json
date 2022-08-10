@@ -1,7 +1,9 @@
 {
    "name": "optigon-bridge-frontend",
    "version": "0.1.0",
-   "private": true,
+   "description": "Frontend for the Optigon Bridge",
+   "author": "MaximilianFullStack",
+   "license": "GPL-3.0",
    "dependencies": {
       "@testing-library/jest-dom": "^5.14.1",
       "@testing-library/react": "^13.0.0",
