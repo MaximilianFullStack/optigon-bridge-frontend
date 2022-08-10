@@ -9,6 +9,7 @@ export default function OptimismPoolData() {
    const [lockedTokens, setLockedTokens] = useState("");
    const [fee, setFeeValue] = useState("");
    const [share, setPoolShare] = useState("");
+   const [yearlyGenFees, setGenFees] = useState("");
 
    const RPC = `https://opt-goerli.g.alchemy.com/v2/${process.env.REACT_APP_OPTIMISM_RPC}`;
    const oracleRPC = `https://eth-mainnet.g.alchemy.com/v2/${process.env.REACT_APP_ORACLE_RPC}`;
@@ -34,6 +35,10 @@ export default function OptimismPoolData() {
       try {
          const loTokens = await contract.TLV();
          const gfee = await contract.adminFee();
+         const totalGeneratedFees = await contract.totalGeneratedFees();
+         setGenFees(
+            ethers.utils.formatEther(totalGeneratedFees.div(2).mul(365))
+         );
          setLockedTokens(ethers.utils.formatEther(loTokens));
          setFeeValue((100 / gfee).toString());
          getOracleEthPrice();
@@ -69,7 +74,9 @@ export default function OptimismPoolData() {
             <h3>Pool Data</h3>
             <li>
                <p>APR:</p>
-               <h4>{(0.0).toFixed(2)}%</h4>
+               <h4>
+                  {parseFloat((yearlyGenFees / lockedTokens) * 100).toFixed(2)}%
+               </h4>
             </li>
             <li>
                <p>Tokens Locked:</p>
