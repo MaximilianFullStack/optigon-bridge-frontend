@@ -17,5 +17,5 @@ A front end for the Optigon Bridge protocol. Allows for bridging Ether between P
 5. Optimism Stake Page
 ![optimism eth stake](https://user-images.githubusercontent.com/108776533/183810272-31d92c06-b158-4a02-8cc3-5413f4132735.PNG)
 
-6. User stake position on Optimism!
-[Optimism user position](https://user-images.githubusercontent.com/108776533/183810386-7edf53b0-7dc6-4eb4-9db9-6c7e0cfe8cbc.PNG)
+6. User stake position on Optimism
+![Optimism user position](https://user-images.githubusercontent.com/108776533/183810386-7edf53b0-7dc6-4eb4-9db9-6c7e0cfe8cbc.PNG)
