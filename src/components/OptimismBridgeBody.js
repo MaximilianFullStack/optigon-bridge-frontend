@@ -28,34 +28,60 @@ export default function OptimismBridge() {
       setWethInput(output);
    }
 
+   async function checkLiquidity() {
+      const RPC =
+         "https://polygon-mumbai.g.alchemy.com/v2/uw_Gwkz6SjluycgL-W_SZseL28Enw11G";
+
+      const alchemy = new ethers.providers.JsonRpcProvider(RPC);
+      const bridge = new ethers.Contract(
+         contractAddresses.polygon,
+         abi.polygon,
+         alchemy
+      );
+      const weth = new ethers.Contract(
+         contractAddresses.mumbaiWeth,
+         abi.mumbaiWeth,
+         alchemy
+      );
+      const bal = await weth.balanceOf(contractAddresses.polygon);
+      const genFees = await bridge.totalGeneratedFees();
+      const tlv = bal - genFees;
+      return tlv.toString();
+   }
+
    async function bridgeEth() {
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
       if (chainId === "0x1a4" && etherInput > 0) {
-         const provider = await new ethers.providers.Web3Provider(
-            window.ethereum
-         );
-         const signer = await provider.getSigner();
-         const signerAddr = await signer.getAddress();
+         const polyLiquidity = await checkLiquidity();
+         if (ethers.utils.formatEther(polyLiquidity) > etherInput) {
+            const provider = await new ethers.providers.Web3Provider(
+               window.ethereum
+            );
+            const signer = await provider.getSigner();
+            const signerAddr = await signer.getAddress();
 
-         const bridge = new ethers.Contract(
-            contractAddresses.optimism,
-            abi.optimism,
-            signer
-         );
+            const bridge = new ethers.Contract(
+               contractAddresses.optimism,
+               abi.optimism,
+               signer
+            );
 
-         let userBal = await provider.getBalance(signerAddr);
-         userBal = ethers.utils.formatEther(userBal.toString());
-         if (userBal >= etherInput) {
-            try {
-               const tx = await bridge.bridgeEther({
-                  value: ethers.utils.parseEther(etherInput),
-               });
-               await tx.wait(10000).then(window.location.reload(false));
-            } catch (e) {
-               console.log(e);
+            let userBal = await provider.getBalance(signerAddr);
+            userBal = ethers.utils.formatEther(userBal.toString());
+            if (userBal >= etherInput) {
+               try {
+                  const tx = await bridge.bridgeEther({
+                     value: ethers.utils.parseEther(etherInput),
+                  });
+                  await tx.wait(10000).then(window.location.reload(false));
+               } catch (e) {
+                  console.log(e);
+               }
+            } else {
+               console.warn("Not enough eth");
             }
          } else {
-            console.warn("Not enough eth");
+            console.warn("Polygon Liquidity too low");
          }
       } else {
          console.warn("Wrong network or zero value input");

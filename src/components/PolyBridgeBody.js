@@ -28,54 +28,75 @@ export default function PolygonBridgeBody() {
       setWethInput(output);
    }
 
+   async function checkLiquidity() {
+      const RPC =
+         "https://opt-goerli.g.alchemy.com/v2/fPIO4h4AEw7YD3MuImmy6ZkhJcpIuLXS";
+
+      const alchemy = new ethers.providers.JsonRpcProvider(RPC);
+      const bridge = new ethers.Contract(
+         contractAddresses.optimism,
+         abi.optimism,
+         alchemy
+      );
+      const bal = await alchemy.getBalance(contractAddresses.optimism);
+      const genFees = await bridge.totalGeneratedFees();
+      const tlv = bal - genFees;
+      return tlv.toString();
+   }
+
    async function bridgeWeth() {
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
       if (chainId === "0x13881" && wethInput > 0) {
-         const provider = await new ethers.providers.Web3Provider(
-            window.ethereum
-         );
-         const signer = await provider.getSigner();
-         const signerAddr = await signer.getAddress();
+         const optiLiquidty = await checkLiquidity();
+         if (ethers.utils.formatEther(optiLiquidty) > wethInput) {
+            const provider = await new ethers.providers.Web3Provider(
+               window.ethereum
+            );
+            const signer = await provider.getSigner();
+            const signerAddr = await signer.getAddress();
 
-         const bridge = new ethers.Contract(
-            contractAddresses.polygon,
-            abi.polygon,
-            signer
-         );
+            const bridge = new ethers.Contract(
+               contractAddresses.polygon,
+               abi.polygon,
+               signer
+            );
 
-         const weth = new ethers.Contract(
-            contractAddresses.mumbaiWeth,
-            abi.mumbaiWeth,
-            signer
-         );
+            const weth = new ethers.Contract(
+               contractAddresses.mumbaiWeth,
+               abi.mumbaiWeth,
+               signer
+            );
 
-         const wethBal = await weth.balanceOf(signerAddr);
-         const allowance = await weth.allowance(
-            signerAddr,
-            contractAddresses.polygon
-         );
+            const wethBal = await weth.balanceOf(signerAddr);
+            const allowance = await weth.allowance(
+               signerAddr,
+               contractAddresses.polygon
+            );
 
-         if (wethBal >= ethers.utils.parseEther(wethInput)) {
-            if (
-               allowance.toString() >=
-               ethers.utils.parseEther(wethInput).toString()
-            ) {
-               try {
-                  const tx = await bridge.bridgeWeth(
+            if (wethBal >= ethers.utils.parseEther(wethInput)) {
+               if (
+                  allowance.toString() >=
+                  ethers.utils.parseEther(wethInput).toString()
+               ) {
+                  try {
+                     const tx = await bridge.bridgeWeth(
+                        ethers.utils.parseEther(wethInput)
+                     );
+                     await tx.wait(10000).then(window.location.reload(false));
+                  } catch (e) {
+                     console.log(e);
+                  }
+               } else {
+                  await weth.approve(
+                     contractAddresses.polygon,
                      ethers.utils.parseEther(wethInput)
                   );
-                  await tx.wait(10000).then(window.location.reload(false));
-               } catch (e) {
-                  console.log(e);
                }
             } else {
-               await weth.approve(
-                  contractAddresses.polygon,
-                  ethers.utils.parseEther(wethInput)
-               );
+               console.warn("Not enough Weth");
             }
          } else {
-            console.warn("Not enough Weth");
+            console.warn("Optimism Liquidity too low");
          }
       } else {
          console.warn("Wrong network or zero value input");
