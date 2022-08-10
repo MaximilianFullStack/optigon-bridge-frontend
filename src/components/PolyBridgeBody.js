@@ -48,7 +48,7 @@ export default function PolygonBridgeBody() {
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
       if (chainId === "0x13881" && wethInput > 0) {
          const optiLiquidty = await checkLiquidity();
-         if (ethers.utils.formatEther(optiLiquidty) > wethInput) {
+         if (ethers.utils.formatEther(optiLiquidty) >= wethInput) {
             const provider = await new ethers.providers.Web3Provider(
                window.ethereum
             );

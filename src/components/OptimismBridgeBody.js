@@ -53,7 +53,7 @@ export default function OptimismBridge() {
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
       if (chainId === "0x1a4" && etherInput > 0) {
          const polyLiquidity = await checkLiquidity();
-         if (ethers.utils.formatEther(polyLiquidity) > etherInput) {
+         if (ethers.utils.formatEther(polyLiquidity) >= etherInput) {
             const provider = await new ethers.providers.Web3Provider(
                window.ethereum
             );

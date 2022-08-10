@@ -10,10 +10,8 @@ export default function OptimismPoolData() {
    const [fee, setFeeValue] = useState("");
    const [share, setPoolShare] = useState("");
 
-   const RPC =
-      "";
-   const oracleRPC =
-      "";
+   const RPC = "";
+   const oracleRPC = "";
 
    async function getOracleEthPrice() {
       const alchemy = new ethers.providers.JsonRpcProvider(oracleRPC);
